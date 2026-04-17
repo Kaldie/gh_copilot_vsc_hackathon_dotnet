@@ -1,4 +1,4 @@
-Brainfarting :/
+## Brainfarting :/
 
 We will be using this repo to test and develop the use case. We will create a seperate repo with all the instructions for the workshop once this is done. 
 
@@ -19,3 +19,16 @@ To demo:
 [] Demo GHCP features (steering, model selection)
 [] Spec kit (explain what it is)
 [] Agent Squad showcase
+
+
+
+
+## Resources 
+
+For demoing Agent Squads:
+
+Install this extension in VSCode:
+SquadUI by Jeffrey T. Fritz
+
+And repo to the Agent Squad plugin:
+[Agent Squad Repo](https://github.com/bradygaster/squad)
