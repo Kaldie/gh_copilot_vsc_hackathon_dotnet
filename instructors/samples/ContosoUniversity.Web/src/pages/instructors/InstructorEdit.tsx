@@ -1,0 +1,89 @@
+import { useEffect, useState } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import FormField from "@/components/FormField";
+import { api } from "@/services/api";
+import { LoadingCard } from "@/components/LoadingSpinner";
+import type { InstructorDetailDto, ApiError } from "@/types";
+
+export default function InstructorEdit() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const [lastName, setLastName] = useState("");
+  const [firstMidName, setFirstMidName] = useState("");
+  const [hireDate, setHireDate] = useState("");
+  const [officeLocation, setOfficeLocation] = useState("");
+  const [currentCourseIds, setCurrentCourseIds] = useState<number[]>([]);
+  const [errors, setErrors] = useState<Record<string, string[]>>({});
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    api.get<InstructorDetailDto>(`/instructors/${id}`)
+      .then((instructor) => {
+        setLastName(instructor.lastName);
+        setFirstMidName(instructor.firstMidName);
+        setHireDate(instructor.hireDate.split("T")[0] ?? "");
+        setOfficeLocation(instructor.officeLocation ?? "");
+        setCurrentCourseIds(instructor.courses.map((c) => c.courseId));
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, [id]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrors({});
+    setSubmitting(true);
+
+    try {
+      await api.put<InstructorDetailDto>(`/instructors/${id}`, {
+        lastName,
+        firstMidName,
+        hireDate: new Date(hireDate).toISOString(),
+        officeLocation: officeLocation || null,
+        courseIds: currentCourseIds,
+      });
+      navigate(`/instructors/${id}`);
+    } catch (err) {
+      const apiErr = err as ApiError;
+      if (apiErr.errors) setErrors(apiErr.errors);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (loading) return <LoadingCard />;
+
+  return (
+    <div className="mx-auto max-w-lg">
+      <h1 className="mb-6 text-xl font-semibold text-gray-900 dark:text-gray-100">Edit Instructor</h1>
+      <form onSubmit={handleSubmit} className="rounded-lg border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
+        <FormField label="Last Name" htmlFor="lastName" error={errors["LastName"]?.[0]}>
+          <input id="lastName" type="text" required maxLength={50} value={lastName} onChange={(e) => setLastName(e.target.value)}
+            className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 transition-colors focus:border-gray-300 dark:focus:border-gray-500 focus:bg-white dark:focus:bg-gray-600 focus:outline-none" />
+        </FormField>
+        <FormField label="First Name" htmlFor="firstMidName" error={errors["FirstMidName"]?.[0]}>
+          <input id="firstMidName" type="text" required maxLength={50} value={firstMidName} onChange={(e) => setFirstMidName(e.target.value)}
+            className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 transition-colors focus:border-gray-300 dark:focus:border-gray-500 focus:bg-white dark:focus:bg-gray-600 focus:outline-none" />
+        </FormField>
+        <FormField label="Hire Date" htmlFor="hireDate" error={errors["HireDate"]?.[0]}>
+          <input id="hireDate" type="date" required value={hireDate} onChange={(e) => setHireDate(e.target.value)}
+            className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 transition-colors focus:border-gray-300 dark:focus:border-gray-500 focus:bg-white dark:focus:bg-gray-600 focus:outline-none" />
+        </FormField>
+        <FormField label="Office Location (optional)" htmlFor="officeLocation">
+          <input id="officeLocation" type="text" value={officeLocation} onChange={(e) => setOfficeLocation(e.target.value)}
+            className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 transition-colors focus:border-gray-300 dark:focus:border-gray-500 focus:bg-white dark:focus:bg-gray-600 focus:outline-none" />
+        </FormField>
+        <div className="mt-6 flex gap-3">
+          <button type="submit" disabled={submitting}
+            className="rounded-lg bg-gray-900 dark:bg-gray-100 dark:text-gray-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-800 dark:hover:bg-gray-200 disabled:opacity-40">
+            {submitting ? "Saving..." : "Save"}
+          </button>
+          <Link to={`/instructors/${id}`} className="rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors hover:bg-gray-50 dark:hover:bg-gray-700">
+            Cancel
+          </Link>
+        </div>
+      </form>
+    </div>
+  );
+}
