@@ -46,18 +46,28 @@ The constitution is new to most participants. Key points to convey:
 
 ```
 /speckit.constitution This is a modernization of a legacy .NET Framework app.
-The legacy code in src/ContosoUniversity/ must not be modified — it stays as a
-reference. New backend code goes in src/ContosoUniversity.Api/ and new frontend
-code goes in src/ContosoUniversity.Web/. We follow clean architecture principles.
-All code must be async. No external cloud services — everything runs locally
-with just .NET 9 SDK and Node.js. Nullable reference types enabled.
+Legacy .NET Framework 4.8.2 modernization. src/ContosoUniversity/ is read-only
+reference code — never modify it.
+
+New code locations:
+- Backend: src/ContosoUniversity.Api/ — .NET 9 Web API (REST only, no Razor/server HTML)
+- Frontend: src/ContosoUniversity.Web/ — Vite + React + TypeScript + TailwindCSS
+
+Principles: clean architecture, async all the way, nullable reference types enabled,
+built-in DI for all services, appsettings.json (no Web.config).
+
+Constraints:
+- SQLite only (no SQL Server)
+- SSE for notifications (no SignalR, no WebSockets, no polling)
+- File uploads behind IStorageService abstraction
+- Zero external services — runs with just .NET 9 SDK + Node.js
 ```
 
 ### Why Subfolders (Not a Branch)
 
 Participants may ask why we create new projects alongside the legacy app instead of modifying it on a branch. The reasons:
 
-1. **Reference access** — Copilot can see the legacy code via `@workspace` while generating the new code. This produces better results.
+1. **Reference access** — Copilot can see the legacy code while generating the new code. This produces better results.
 2. **Side-by-side comparison** — You can run both apps simultaneously for the showcase.
 3. **Simpler git workflow** — No merge conflicts or branch management during the workshop.
 4. **Realistic pattern** — Many real modernizations build new services alongside legacy ones (strangler fig pattern).

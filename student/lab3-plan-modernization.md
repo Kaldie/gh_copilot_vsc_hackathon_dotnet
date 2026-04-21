@@ -114,15 +114,7 @@ Think about what principles should guide this modernization. For example:
 - What coding standards matter? (async/await, DI, nullable types, etc.)
 - What's out of scope? (deployment, CI/CD, authentication)
 
-Use `/speckit.constitution` and provide your principles. For example:
-
-```
-/speckit.constitution This is a modernization of a legacy .NET Framework app. 
-The legacy code in src/ContosoUniversity/ must not be modified — it stays as 
-a reference. New code goes in src/ContosoUniversity.Api/ (backend) and 
-src/ContosoUniversity.Web/ (frontend). We follow clean architecture principles. 
-All code must be async. No external cloud services — everything runs locally.
-```
+Use `/speckit.constitution` and provide your principles.
 
 **Open `.specify/memory/constitution.md`** and review it. This file existed as a placeholder template — `/speckit.constitution` replaced the placeholders with your actual principles. This will influence every artifact Spec Kit generates.
 
