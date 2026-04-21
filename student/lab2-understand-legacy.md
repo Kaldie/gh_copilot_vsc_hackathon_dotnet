@@ -79,7 +79,7 @@ In a real migration project, this discovery phase is critical — you can't plan
 
 ### Your Task
 
-Use GitHub Copilot Chat with `@workspace` to build a comprehensive picture of this application. Your goal is to produce a **migration inventory** — a structured overview that covers:
+Use GitHub Copilot Chat to build a comprehensive picture of this application. Your goal is to produce a **migration inventory** — a structured overview that covers:
 
 1. **Architecture & frameworks** — What is the tech stack? What patterns does the code follow?
 2. **Data model** — What entities exist? How are they related? What database features are used?
@@ -91,7 +91,7 @@ Use GitHub Copilot Chat with `@workspace` to build a comprehensive picture of th
 ### How to Approach This
 
 - Start broad, then drill into specific areas
-- Use `@workspace` so Copilot has the full codebase as context
+- Ensure Copilot has the full codebase as context
 - Ask follow-up questions when an answer mentions something you want to understand better
 - Don't just read the answers — verify them by opening the files Copilot references
 - Try to find things Copilot might miss or get wrong

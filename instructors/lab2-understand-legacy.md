@@ -29,12 +29,12 @@ Use these prompts if participants get stuck or if you want to demonstrate live. 
 
 **Sample prompts:**
 ```
-@workspace Explain the architecture of this application. What framework is it 
+I want to understand the Contoso University app that is in the .src folder. Can you explain the architecture of this application. What framework is it 
 built on, what patterns does it use, and what are the main components?
 ```
 
 ```
-@workspace What are all the external dependencies this application has? 
+What are all the external dependencies this application has? 
 List the infrastructure it needs to run (database, messaging, file system, etc.)
 ```
 
@@ -52,12 +52,12 @@ List the infrastructure it needs to run (database, messaging, file system, etc.)
 
 **Sample prompts:**
 ```
-@workspace Describe the database model. What entities exist, how are they 
+Describe the database model. What entities exist, how are they 
 related, and what inheritance strategy is used?
 ```
 
 ```
-@workspace What does the DbInitializer do? How is the database seeded?
+What does the DbInitializer do? How is the database seeded?
 ```
 
 **Key points Copilot should surface:**
@@ -76,12 +76,12 @@ related, and what inheritance strategy is used?
 
 **Sample prompts:**
 ```
-@workspace How does the notification system work? Trace the flow from when a 
+How does the notification system work? Trace the flow from when a 
 user creates a student to when the notification appears in the browser.
 ```
 
 ```
-@workspace Show me the NotificationService class. How does it use MSMQ? 
+Show me the NotificationService class. How does it use MSMQ? 
 What happens if MSMQ is not available?
 ```
 
@@ -107,7 +107,7 @@ What happens if MSMQ is not available?
 
 **Sample prompts:**
 ```
-@workspace How does the teaching material file upload work in the Courses 
+How does the teaching material file upload work in the Courses 
 controller? Where are files stored and how are they referenced?
 ```
 
@@ -125,13 +125,13 @@ controller? Where are files stored and how are they referenced?
 
 **Sample prompts:**
 ```
-@workspace What would be the main challenges in migrating this application 
+What would be the main challenges in migrating this application 
 from .NET Framework 4.8 to .NET 9? List specific classes and patterns that 
 would need to change.
 ```
 
 ```
-@workspace Which namespaces and APIs used in this project don't exist in 
+Which namespaces and APIs used in this project don't exist in 
 ASP.NET Core? List them with their ASP.NET Core replacements.
 ```
 
@@ -156,20 +156,10 @@ ASP.NET Core? List them with their ASP.NET Core replacements.
 
 ---
 
-## Bridge to Planning Session (13:00)
+## Bridge to Planning Session
 
-Optionally use the draw.io MCP integration to create an architecture diagram from the participants' inventories as a live demo. This serves two purposes:
-
-1. **Visual summary** — turns the text-based inventory into a diagram the group can reference during migration
-2. **MCP showcase** — demonstrates how Copilot can be extended with external tools via MCP
-
-**Demo flow (~5 min at the start of the 13:00 planning session):**
-1. Open Copilot Chat and have the draw.io MCP server configured
-2. Ask Copilot to generate an architecture diagram from the migration inventory (use a participant's file or your own)
-3. Show the generated `.drawio` file — highlight the legacy components and where they'll change
-4. Transition: "Now let's take this understanding and turn it into a formal migration spec with Spec Kit"
-
-> **Setup:** Make sure the draw.io MCP extension is installed and configured before the workshop. Test it once to verify it works in your environment.
+Optionally use some tools to visualize the architecture and data model. Mermaid is probably the easiest.
+There is a sample `migration-inventory.md` in the instructors folder with these.
 
 ---
 

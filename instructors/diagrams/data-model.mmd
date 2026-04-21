@@ -1,0 +1,73 @@
+erDiagram
+    Person {
+        int ID PK
+        string LastName
+        string FirstMidName
+        string Discriminator
+    }
+
+    Student {
+        int ID PK
+        datetime2 EnrollmentDate
+    }
+
+    Instructor {
+        int ID PK
+        datetime2 HireDate
+    }
+
+    Course {
+        int CourseID PK
+        string Title
+        int Credits
+        int DepartmentID FK
+        string TeachingMaterialImagePath
+    }
+
+    Enrollment {
+        int EnrollmentID PK
+        int CourseID FK
+        int StudentID FK
+        Grade Grade
+    }
+
+    Department {
+        int DepartmentID PK
+        string Name
+        decimal Budget
+        datetime2 StartDate
+        int InstructorID FK
+        bytes RowVersion
+    }
+
+    CourseAssignment {
+        int CourseID PK
+        int InstructorID PK
+    }
+
+    OfficeAssignment {
+        int InstructorID PK
+        string Location
+    }
+
+    Notification {
+        int Id PK
+        string EntityType
+        string EntityId
+        string Operation
+        string Message
+        datetime2 CreatedAt
+        string CreatedBy
+        bool IsRead
+        datetime2 ReadAt
+    }
+
+    Person ||--o| Student : "TPH inheritance"
+    Person ||--o| Instructor : "TPH inheritance"
+    Student ||--o{ Enrollment : "has many"
+    Course ||--o{ Enrollment : "has many"
+    Instructor ||--o{ CourseAssignment : "has many"
+    Course ||--o{ CourseAssignment : "has many"
+    Instructor ||--o| OfficeAssignment : "has one"
+    Department ||--o{ Course : "has many"
+    Department }o--|| Instructor : "administered by"
