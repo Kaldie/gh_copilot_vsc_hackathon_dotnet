@@ -31,6 +31,13 @@ SqlLocalDB.exe info
 Test-Path "C:\Program Files\IIS Express\iisexpress.exe"
 ```
 
+If `SqlLocalDB.exe info MSSQLLocalDB` reports that the automatic instance does not exist, create and start it before running the app:
+
+```powershell
+SqlLocalDB.exe create MSSQLLocalDB
+SqlLocalDB.exe start MSSQLLocalDB
+```
+
 ### Build and Run
 
 Open a terminal in the root of the workshop repository and run:

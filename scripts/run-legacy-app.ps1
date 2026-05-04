@@ -14,10 +14,11 @@ if (-not (Test-Path $vsWhere)) {
     Write-Host "ERROR: Visual Studio not found. Install VS 2022 or Build Tools." -ForegroundColor Red
     exit 1
 }
-$vsPath = & $vsWhere -latest -property installationPath
-$msbuild = Join-Path $vsPath "MSBuild\Current\Bin\MSBuild.exe"
-if (-not (Test-Path $msbuild)) {
-    Write-Host "ERROR: MSBuild not found at $msbuild" -ForegroundColor Red
+$msbuild = (& $vsWhere -latest -products * -requires Microsoft.Component.MSBuild -find "MSBuild\**\Bin\MSBuild.exe" |
+    Select-Object -First 1)
+
+if ([string]::IsNullOrWhiteSpace($msbuild) -or -not (Test-Path $msbuild)) {
+    Write-Host "ERROR: MSBuild not found. Install Visual Studio 2022 or Build Tools with the ASP.NET and web development workload." -ForegroundColor Red
     exit 1
 }
 Write-Host "  Found: $msbuild" -ForegroundColor Green

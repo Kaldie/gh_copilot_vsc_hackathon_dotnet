@@ -15,6 +15,7 @@ Common issues participants may hit:
 | NuGet restore fails | Ensure internet access. Corporate firewalls may block `nuget.org`. |
 | Port 5555 in use | Kill existing IIS Express: `Get-Process iisexpress \| Stop-Process -Force` |
 | Database creation fails | Verify LocalDB: `SqlLocalDB.exe start MSSQLLocalDB` |
+| `MSSQLLocalDB` instance missing | Create it first: `SqlLocalDB.exe create MSSQLLocalDB`, then `SqlLocalDB.exe start MSSQLLocalDB` |
 | 500 error on Create/Edit pages | Should be fixed already (locale-dependent DateTime Range attributes were removed). |
 
 **Tip for participants:** Encourage them to paste error messages into Copilot Chat — this is itself a learning exercise.
