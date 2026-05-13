@@ -5,48 +5,35 @@
 
 ---
 
-## Part 1: Run the Legacy App Locally (15 min)
+## Part 1: Validate the Workspace with Docker Compose (15 min)
 
 ### Prerequisites
 
-Make sure you have the following installed:
+The default path for this workshop is Docker-first, so you do **not** need to install Visual Studio, IIS Express, or LocalDB just to get started.
 
-- [**Visual Studio 2022**](https://visualstudio.microsoft.com/downloads/) (Community or higher) — or the [**Build Tools for Visual Studio 2022**](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022) with the "ASP.NET and web development" workload
-- [**SQL Server LocalDB**](https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb) (included with Visual Studio)
-- **IIS Express** (included with Visual Studio)
-- [**.NET Framework 4.8.2 Developer Pack**](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net482)
+Make sure you have:
 
-> **Stuck on prerequisites?** Open Copilot Chat and describe what's not working — it can help you troubleshoot installation issues, find the right download links, or verify your environment.
+- Docker Desktop or Docker Engine with Compose
+- Permission to run Docker without having to stop for a password every time (`docker` group on Linux/WSL, or an elevated shell on Windows)
+- Node.js 20+ and npm if you want to explore frontend tooling later
 
-You can verify your setup by running:
+> **Stuck on prerequisites?** Open Copilot Chat and describe what's not working — it can help you troubleshoot Docker or verify your environment.
 
-```powershell
-# Check Visual Studio is installed
-& "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
+### Docker-first checks
 
-# Check LocalDB is available
-SqlLocalDB.exe info
+From the root of the workshop repository, run:
 
-# Check IIS Express is present
-Test-Path "C:\Program Files\IIS Express\iisexpress.exe"
+```bash
+./scripts/docker/run-compose.sh --profile ci run --rm build-check
 ```
 
-If `SqlLocalDB.exe info MSSQLLocalDB` reports that the automatic instance does not exist, create and start it before running the app:
+That containerized check restores packages, builds what it can, and runs any available Node/React checks inside Docker.
 
-```powershell
-SqlLocalDB.exe create MSSQLLocalDB
-SqlLocalDB.exe start MSSQLLocalDB
+If you want the legacy SQL Server container running for experiments, start it with:
+
+```bash
+./scripts/docker/run-compose.sh up -d sql
 ```
-
-### Build and Run
-
-Open a terminal in the root of the workshop repository and run:
-
-```powershell
-.\scripts\run-legacy-app.ps1
-```
-
-This script restores NuGet packages, builds the solution, and launches IIS Express on **http://localhost:5555**. Your browser should open automatically.
 
 > **First load is slow** — the database gets created and seeded with sample data on the first request (10-15 seconds).
 
@@ -74,7 +61,7 @@ Click through the app and get familiar with what it does:
 
 <img src="screenshots/lab2-notification.png" width="600" alt="Notification popup after a CRUD operation" />
 
-When you're done exploring, press `Q` in the terminal running IIS Express to stop the server.
+When you're done exploring, stop the containers with `./scripts/docker/run-compose.sh down`.
 
 ---
 
@@ -115,7 +102,7 @@ This isn't just a lab exercise — we'll use this inventory as input for creatin
 
 By now you should:
 
-- Have the legacy app building and running locally on IIS Express
+- Have validated the workspace with Docker Compose
 - Have explored the application's UI and understood what it does
 - Have used Copilot to build your own understanding of the architecture, data model, and dependencies
 - Have identified the key migration challenges ahead

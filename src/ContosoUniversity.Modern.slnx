@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="ContosoUniversity.Api/ContosoUniversity.Api.csproj" />
+  <Project Path="ContosoUniversity.Api.Tests/ContosoUniversity.Api.Tests.csproj" />
+</Solution>

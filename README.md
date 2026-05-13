@@ -26,11 +26,25 @@ The source application is a university management system (ASP.NET MVC 5 on .NET 
 ## Prerequisites
 
 - **VS Code** with GitHub Copilot extension (active license)
-- **Visual Studio 2022** or Build Tools (to build/run the legacy app in Lab 2)
-- **.NET 9 SDK** (modernization target)
+- **Docker Desktop** or **Docker Engine + Compose** (primary build/check path in this workshop)
+- **.NET 10 SDK** or newer (for containerized C# build/check tasks)
 - **Node.js 20+** and **npm** (React frontend)
-- **SQL Server LocalDB** (included with Visual Studio — for the legacy app only)
-- **IIS Express** (included with Visual Studio — for the legacy app only)
+- **Windows + Visual Studio 2022 / Build Tools / LocalDB / IIS Express** only if you want to run the legacy app natively instead of using Docker
+
+## Build And Test Route (Important)
+
+For this workshop repo, treat **Docker** as the default and authoritative build/test path.
+
+- Do not assume a local `dotnet` SDK is installed on the host machine.
+- Use containerized checks first:
+	- `docker compose -f docker-compose.yml --profile ci run --rm build-check`
+- Start the app stack with:
+	- `docker compose -f docker-compose.yml up -d sql api web`
+
+Notes:
+
+- The legacy app under `src/ContosoUniversity` is Windows-only for native execution.
+- The Docker CI script intentionally validates the modern code path and skips legacy native build requirements.
 
 ## For Workshop Facilitators
 

@@ -18,6 +18,8 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+When presenting commands, provide a brief explanation of what each command does (short and clear).
+
 ## Pre-Execution Checks
 
 **Check for extension hooks (before planning)**:

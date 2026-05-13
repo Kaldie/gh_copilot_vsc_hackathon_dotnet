@@ -1,0 +1,95 @@
+name: contoso-workshop
+
+services:
+  sql:
+    # SQL Server for the legacy app database.
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: contoso-sql
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:-Your_strong_password123!}
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+
+  api:
+    # Modern backend API running in a .NET SDK container.
+    image: mcr.microsoft.com/dotnet/sdk:10.0
+    user: "1000:1000"
+    container_name: contoso-api
+    working_dir: /workspace/src/ContosoUniversity.Api
+    depends_on:
+      - sql
+    environment:
+      ASPNETCORE_URLS: http://0.0.0.0:8080
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: Server=sql,1433;Database=ContosoUniversity;User Id=sa;Password=${MSSQL_SA_PASSWORD:-Your_strong_password123!};TrustServerCertificate=True;Encrypt=False
+    volumes:
+      - ./:/workspace
+      - /etc/ssl/certs:/etc/ssl/certs:ro
+      - /usr/local/share/ca-certificates:/usr/local/share/ca-certificates:ro
+    ports:
+      - "8080:8080"
+    entrypoint: ["bash", "-lc"]
+    command: ["dotnet restore && dotnet run --no-restore --urls http://0.0.0.0:8080"]
+
+  web:
+    # Modern React frontend served by Vite dev server.
+    image: node:20
+    user: "1000:1000"
+    container_name: contoso-web
+    working_dir: /workspace/src/ContosoUniversity.Web
+    depends_on:
+      - api
+    environment:
+      VITE_API_PROXY_TARGET: http://api:8080
+    volumes:
+      - ./:/workspace
+    ports:
+      - "5173:5173"
+    entrypoint: ["bash", "-lc"]
+    command: ["if [[ -f package-lock.json ]]; then npm ci; else npm install; fi && npm run dev -- --host 0.0.0.0 --port 5173"]
+
+  tools:
+    # Latest C# toolchain for workspace checks and modern code.
+    image: mcr.microsoft.com/dotnet/sdk:10.0
+    user: "1000:1000"
+    container_name: contoso-tools
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace
+      - /etc/ssl/certs:/etc/ssl/certs:ro
+      - /usr/local/share/ca-certificates:/usr/local/share/ca-certificates:ro
+    command: ["tail", "-f", "/dev/null"]
+
+  build-check:
+    # CI-style build/test entrypoint for containerized validation.
+    image: mcr.microsoft.com/dotnet/sdk:10.0
+    user: "1000:1000"
+    container_name: contoso-build-check
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace
+      - /etc/ssl/certs:/etc/ssl/certs:ro
+      - /usr/local/share/ca-certificates:/usr/local/share/ca-certificates:ro
+    entrypoint: ["bash", "-lc"]
+    command: "./scripts/docker/build-check.sh"
+    profiles: ["ci"]
+
+  frontend:
+    # Optional frontend container. If no frontend app exists, it just stays idle.
+    image: node:20
+    user: "1000:1000"
+    container_name: contoso-frontend
+    working_dir: /workspace/${FRONTEND_PATH:-src/ContosoUniversity.Web}
+    volumes:
+      - ./:/workspace
+    ports:
+      - "5173:5173"
+    entrypoint: ["bash", "-lc"]
+    command: ["if [[ -f package.json ]]; then npm ci && npm run dev -- --host 0.0.0.0 --port 5173; else echo \"No frontend found at /workspace/${FRONTEND_PATH:-src/ContosoUniversity.Web}\"; tail -f /dev/null; fi"]
+    profiles: ["frontend"]
+
+volumes:
+  sql_data:
