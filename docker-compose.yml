@@ -16,7 +16,7 @@ services:
   api:
     # Modern backend API running in a .NET SDK container.
     image: mcr.microsoft.com/dotnet/sdk:10.0
-    user: "1000:1000"
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
     container_name: contoso-api
     working_dir: /workspace/src/ContosoUniversity.Api
     depends_on:
@@ -37,7 +37,7 @@ services:
   web:
     # Modern React frontend served by Vite dev server.
     image: node:20
-    user: "1000:1000"
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
     container_name: contoso-web
     working_dir: /workspace/src/ContosoUniversity.Web
     depends_on:
@@ -54,7 +54,7 @@ services:
   tools:
     # Latest C# toolchain for workspace checks and modern code.
     image: mcr.microsoft.com/dotnet/sdk:10.0
-    user: "1000:1000"
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
     container_name: contoso-tools
     working_dir: /workspace
     volumes:
@@ -66,7 +66,7 @@ services:
   build-check:
     # CI-style build/test entrypoint for containerized validation.
     image: mcr.microsoft.com/dotnet/sdk:10.0
-    user: "1000:1000"
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
     container_name: contoso-build-check
     working_dir: /workspace
     volumes:
@@ -80,7 +80,7 @@ services:
   frontend:
     # Optional frontend container. If no frontend app exists, it just stays idle.
     image: node:20
-    user: "1000:1000"
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
     container_name: contoso-frontend
     working_dir: /workspace/${FRONTEND_PATH:-src/ContosoUniversity.Web}
     volumes:
